@@ -1,16 +1,14 @@
-package in.saurzcode
+package in.saurzcode.regression
 
-import ai.catboost.spark.{CatBoostClassificationModel, CatBoostClassifier, CatBoostRegressionModel, CatBoostRegressor, Pool}
+import ai.catboost.spark.{CatBoostRegressionModel, CatBoostRegressor, Pool}
+import in.saurzcode.spark.SparkSessionWrapper
 import org.apache.spark.ml.linalg.{SQLDataTypes, Vectors}
-import org.apache.spark.sql.{Row, SparkSession}
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
 
-object CatBoostSparkRegression {
+object CatBoostSparkRegression extends SparkSessionWrapper{
   def main(args: Array[String]): Unit = {
-    val spark = SparkSession.builder()
-      .master("local[*]")
-      .appName("RegressorTest")
-      .getOrCreate();
+
 
     val srcDataSchema = Seq(
       StructField("features", SQLDataTypes.VectorType),
@@ -18,10 +16,10 @@ object CatBoostSparkRegression {
     )
 
     val trainData = Seq(
-      Row(Vectors.dense(0.1, 0.2, 0.11), "0.12"),
-      Row(Vectors.dense(0.97, 0.82, 0.33), "0.22"),
-      Row(Vectors.dense(0.13, 0.22, 0.23), "0.34"),
-      Row(Vectors.dense(0.8, 0.62, 0.0), "0.1")
+      Row(Vectors.dense(0.1, 0.2, 0.11,0.7), "0.12"),
+      Row(Vectors.dense(0.97, 0.82, 0.33,0.89), "0.22"),
+      Row(Vectors.dense(0.13, 0.22, 0.23,0.55), "0.34"),
+      Row(Vectors.dense(0.8, 0.62, 0.9,0.8), "0.1")
     )
 
     val trainDf = spark.createDataFrame(spark.sparkContext.parallelize(trainData), StructType(srcDataSchema))
